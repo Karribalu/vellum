@@ -29,7 +29,7 @@ This project uses [Cargo Workspaces](https://doc.rust-lang.org/book/ch14-03-carg
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/karribalu/vellum.git
+    git clone https://github.com/your-org/vellum.git
     cd vellum
     ```
 
@@ -40,7 +40,7 @@ This project uses [Cargo Workspaces](https://doc.rust-lang.org/book/ch14-03-carg
 
 3. Run the main binary (replace `vellum-cli` with your actual binary crate name if different):
     ```sh
-    cargo run -p vellum-core
+    cargo run -p vellum-cli
     ```
 
 4. Run tests for all crates:

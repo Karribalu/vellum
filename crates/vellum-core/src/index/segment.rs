@@ -33,7 +33,7 @@ pub struct SegmentWriter<'a> {
 }
 
 impl<'a> SegmentWriter<'a> {
-    fn new(name: impl Into<String>, analyzer: &'a dyn Analyzer) -> Self {
+    pub fn new(name: impl Into<String>, analyzer: &'a dyn Analyzer) -> Self {
         Self {
             seg_info: SegmentInfo::new(name),
             analyzer,
@@ -43,7 +43,7 @@ impl<'a> SegmentWriter<'a> {
         }
     }
 
-    fn add_document(&mut self, doc: &Document) {
+    pub fn add_document(&mut self, doc: &Document) {
         let doc_id = DocId(self.next_doc_id);
 
         let mut stored_map = HashMap::new();

@@ -14,7 +14,7 @@ pub trait Analyzer {
 pub struct WhitespaceAnalyzer;
 
 impl Analyzer for WhitespaceAnalyzer {
-    fn tokenize(&self, field: &str, text: &str) -> Vec<Token> {
+    fn tokenize(&self, _field: &str, text: &str) -> Vec<Token> {
         let mut pos = 0u32;
         let mut out = Vec::new();
         let mut offset = 0u32;

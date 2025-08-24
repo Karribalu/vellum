@@ -42,20 +42,21 @@ impl PostingsList {
         // We can use the last posting in the vector
         match self.postings.last_mut() {
             Some(last) if last.doc_id == doc_id => {
-                last.freq += 1;
                 if let Some(pos) = maybe_pos {
-                    last.positions.push(pos);
+                    last.add_position(pos);
+                } else {
+                    last.freq += 1;
                 }
                 return;
             }
             _ => {}
         }
-        let mut p = Posting::new(doc_id);
-        p.freq = 1;
+        let mut posting = Posting::new(doc_id);
+        posting.freq = 1;
         if let Some(pos) = maybe_pos {
-            p.positions.push(pos);
+            posting.positions.push(pos);
         }
-        self.postings.push(p);
+        self.postings.push(posting);
     }
 
     pub fn add_posting(&mut self, posting: Posting) {
@@ -65,7 +66,8 @@ impl PostingsList {
     pub fn get_posting(&self, doc_id: DocId) -> Option<&Posting> {
         self.postings.iter().find(|p| p.doc_id == doc_id)
     }
+
+    pub fn sort_by_doc_id(&mut self) {
+        self.postings.sort_by_key(|p| p.doc_id);
+    }
 }
-
-
-

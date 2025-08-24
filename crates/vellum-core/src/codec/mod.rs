@@ -1,1 +1,1 @@
-mod mini_codec_v1;
+pub(crate) mod mini_codec_v1;

@@ -1,4 +1,4 @@
-use std::io::Write;
+use std::io::{Read, Seek, Write};
 use std::path::{Path, PathBuf};
 
 /**
@@ -8,10 +8,20 @@ use std::path::{Path, PathBuf};
 **/
 pub trait Directory {
     fn list_all(&self) -> std::io::Result<Vec<String>>;
-    fn create_output(&self, name: &str) -> std::io::Result<Box<dyn Write>>;
-    fn open_input(&self, name: &str) -> std::io::Result<Box<dyn std::io::Read>>;
+    // Trait objects that combine Read/Write and Seek.
+    // We expose these via small helper traits because `dyn Read + Seek` is not allowed directly.
+    fn create_output(&self, name: &str) -> std::io::Result<Box<dyn DirectoryWriter>>;
+    fn open_input(&self, name: &str) -> std::io::Result<Box<dyn DirectoryReader>>;
     fn delete_file(&self, name: &str) -> std::io::Result<()>;
 }
+
+// Helper trait combining Write and Seek for trait objects.
+pub trait DirectoryWriter: Write + Seek {}
+impl<T: Write + Seek> DirectoryWriter for T {}
+
+// Helper trait combining Read and Seek for trait objects.
+pub trait DirectoryReader: Read + Seek {}
+impl<T: Read + Seek> DirectoryReader for T {}
 
 pub struct FSDirectory {
     root: PathBuf,
@@ -42,13 +52,13 @@ impl Directory for FSDirectory {
         }
         Ok(files)
     }
-    fn create_output(&self, name: &str) -> std::io::Result<Box<dyn Write>> {
+    fn create_output(&self, name: &str) -> std::io::Result<Box<dyn DirectoryWriter>> {
         let path = self.resolve(name);
         let file = std::fs::File::create(path)?;
         Ok(Box::new(file))
     }
 
-    fn open_input(&self, name: &str) -> std::io::Result<Box<dyn std::io::Read>> {
+    fn open_input(&self, name: &str) -> std::io::Result<Box<dyn DirectoryReader>> {
         let path = self.resolve(name);
         let file = std::fs::File::open(path)?;
         Ok(Box::new(file))

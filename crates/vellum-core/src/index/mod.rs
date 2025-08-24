@@ -1,3 +1,3 @@
-mod postings;
-mod terms;
-mod segment;
+pub mod postings;
+pub mod terms;
+pub mod segment;
